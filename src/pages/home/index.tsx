@@ -33,7 +33,7 @@ function Home() {
     <Container>
       <section className="pt-3 w-full max-w-3xl mx-auto flex justify-center items-center">
         <Input
-            className="bg-white rounded-r-none"
+            className="bg-white w-3xl rounded-r-none"
             placeholder="Pesquise por carros:"
             name="search"
             error={errors.search?.message}

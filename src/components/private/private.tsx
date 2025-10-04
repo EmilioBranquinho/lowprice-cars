@@ -1,6 +1,7 @@
 import { useContext, type ReactNode } from "react";
 import { AuthContext } from "../context/authContext";
 import { Navigate } from "react-router";
+import { Spinner } from "../ui/shadcn-io/spinner";
 
 interface ChildProps{
     children: ReactNode
@@ -12,7 +13,7 @@ export default function Private({children}: ChildProps){
 
 
     if(loadingAuth){
-        return <div className="h-screen items-center justify-center"> <div className="text-3xl">Carregando...</div></div>
+        return <div className="h-screen flex items-center justify-center"> <div className="text-3xl"><Spinner color="red" variant="pinwheel"/></div></div>
     }
 
   if(!signed){

@@ -1,15 +1,13 @@
-import { AuthContext } from "@/components/context/authContext"
-import { useContext } from "react"
+import { Container } from "@/components/Container"
+import { DashboardHeader } from "@/components/DashboardHeader"
 
 function Dashboard() {
 
-    const {signed} = useContext(AuthContext)
-
-    console.log(signed)
-
   return (
     <>
-    <h1>Pagina Dashboard</h1> 
+    <Container>
+      <DashboardHeader/>
+    </Container>
     </>  
   )
 }

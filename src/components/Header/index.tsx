@@ -19,7 +19,7 @@ export  function Header(){
                  {signed && loadingAuth === false&&(
                       <div className="flex gap-2 items-center justify-center">
                     <span>{user?.name}</span>
-                     <button className="curso-pointer"><User/></button>
+                     <button className="curso-pointer bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center"><User/></button>
                 </div> 
                  )}
                      
