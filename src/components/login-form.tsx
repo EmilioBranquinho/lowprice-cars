@@ -9,8 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { auth } from "@/services/firebaseConnection";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { Spinner } from "./ui/shadcn-io/spinner";
+import { AuthContext } from "./context/authContext"
 
  const schema = z.object({
     email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
@@ -23,6 +24,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   const navigate = useNavigate();
   const[loading, setLoading] = useState(false);
+  const {signed} = useContext(AuthContext)
 
   const {register, handleSubmit, formState: {errors}} = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -37,11 +39,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
         })
     }
 
-    if(auth){
        handleLogOut()
-    }
-   
-  })
+  }, [])
 
   async function onSubmit(data: FormData){
     setLoading(true)
@@ -56,6 +55,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     })
   }
 
+  console.log(signed)
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

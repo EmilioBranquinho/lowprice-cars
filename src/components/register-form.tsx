@@ -1,3 +1,5 @@
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +12,8 @@ import { auth } from "@/services/firebaseConnection"
 import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth"
 import { useNavigate } from "react-router"
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "./context/authContext";
 
  const schema = z.object({
     name: z.string().nonempty("O campo do nome completo é obrigatório"),
@@ -24,6 +27,8 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
 
     const navigate = useNavigate();
     const[loading, setLoading] = useState(false);
+    const[openDialog, setOpenDialog] = useState(false)
+    const {handleUpdateUser} = useContext(AuthContext)
 
     const {register, handleSubmit, formState: {errors}} = useForm<FormData>({
       resolver: zodResolver(schema),
@@ -37,10 +42,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
             console.log("Deslogou!")
           })
         }
-            if(auth){
               handleLogOut()
-          } 
-   
       })
     
     
@@ -50,16 +52,19 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
       .then(async(user)=>{
         await updateProfile(user.user, {
           displayName: data.name
-      })
+      }) 
+          handleUpdateUser({
+            uid: user.user.uid,
+            name: data.name,
+            email: data.email
+          })
+          setOpenDialog(true)
           setLoading(false)
-          console.log("Cadastrado com sucesso")
-          navigate('/login')
       })
       .catch((error)=>{
         console.log(error)
       })
     }
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -117,6 +122,20 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
           </form>
         </CardContent>
       </Card>
+
+      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Cadastro feito com sucesso!</AlertDialogTitle>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel onClick={() => navigate("/login")}>ok</AlertDialogCancel>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
     </div>
+    
   )
+
+  
 }

@@ -11,7 +11,7 @@ interface InputProps{
   rules?: RegisterOptions;
 }
 
-function Input({ type, name, register, error, rules, className}: InputProps) {
+function Input({ type, name, register, error, rules}: InputProps) {
   return (
     <div className="flex flex-col">
       <input
