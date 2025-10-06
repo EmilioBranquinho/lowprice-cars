@@ -4,7 +4,7 @@ import { Container } from "@/components/Container";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { SkeletonCard } from "@/components/skeleton-card";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 import type { ImageItemProps } from "../dashboard/new";
 
@@ -28,9 +28,14 @@ function Home() {
 
     const[loadImages, setLoadImages] = useState<string[]>([]);
     const[cars, setCars] = useState<CarProps[]>([]);
+    const[inputSearch, setInputSearch] = useState("");
 
     useEffect(()=>{
-      async function getCars(){
+
+      getCars()
+    }, [])
+
+    async function getCars(){
           const carsRef = collection(db, "cars")
           const queryRef = query(carsRef, orderBy("createdAt", "desc"));
         
@@ -56,11 +61,48 @@ function Home() {
               })
             })
               setCars(allCars)
-          }) 
-                    
+          })                  
    }
+
+  async function handleSearchCar(){
+    if(inputSearch === ""){
       getCars()
-    }, [cars])
+      return;
+    }
+
+    setCars([])
+    setLoadImages([])
+
+    const q = query(collection(db, "cars"), 
+    where("name", ">=", inputSearch.toUpperCase()),
+    where("name", "<=", inputSearch.toUpperCase() +"\uf8ff")
+    )
+
+    const querySnapshot = await getDocs(q)
+
+    let searchedCars = [] as CarProps[];
+
+    querySnapshot.forEach((doc)=>{
+      searchedCars.push({
+          id: doc.id,
+          idUser: doc.data().idUser,
+          name: doc.data().name,
+          model: doc.data().model,
+          year: doc.data().year,
+          km: doc.data().km,
+          price: doc.data().price,
+          city: doc.data().city,
+          whatsapp: doc.data().city,
+          description: doc.data().description,
+          createdAt: doc.data().createdAt,
+          owner: doc.data().owner,
+          images: doc.data().images
+      })
+    })
+    setCars(searchedCars)
+    console.log(searchedCars)
+  }
+
 
     function handleImageLoad(id:string){
       setLoadImages((prev) => [...prev, id])
@@ -75,10 +117,12 @@ function Home() {
             className="bg-white lg:w-3xl rounded-r-none"
             placeholder="Pesquise por carros:"
             name="search"
+            value={inputSearch}
+            onChange={e=>{setInputSearch(e.target.value)}}
             />
-       <Button className="rounded-l-none bg-red-600"><Search/></Button>
+       <Button onClick={handleSearchCar} className="rounded-l-none bg-red-600"><Search/></Button>
       </section> 
-        <h1 className="text-center mt-10">Carros novos e usados</h1>
+        <h1 className="text-center mt-10 text-3xl  font-medium">Carros novos e usados</h1>
           <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-5">
         {cars.map((car)=>(
             <>

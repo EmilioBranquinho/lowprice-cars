@@ -67,7 +67,7 @@ function CarDetails() {
     <Container>
       {carDetails &&(
         <Swiper
-      className="mt-3 mx-4"
+      className="mt-3 lg:mx-4"
       modules={[Navigation, Pagination, Scrollbar, A11y]}
       slidesPerView={sliderPreview}
       navigation
@@ -77,7 +77,7 @@ function CarDetails() {
       <SwiperSlide key={image.id} className="flex justify-center items-center">
         <img
         src={image.link}
-        className="w-full h-80 object-cover rounded-lg"
+        className="w-full h-80 object-cover rounded-sm"
         alt={`Imagem ${image.id}`}
         />
       </SwiperSlide>
@@ -117,7 +117,11 @@ function CarDetails() {
             <h1 className="font-semibold">Telefone</h1>
             <p>{carDetails?.whatsapp}</p>
           </div>
-          <a href="#" className="w-auto flex items-center justify-center mx-4 bg-green-600 cursor-pointer rounded-md text-white h-10 mt-3 font-medium">
+          <a 
+          href={`https://api.whatsapp.com/send?phone=${carDetails.whatsapp}&text= Olá, vi esse ${carDetails.name} no site LowPrice cars e fiquei interessado`} 
+          className="w-auto flex items-center justify-center mx-4 bg-green-600 cursor-pointer rounded-md text-white h-10 mt-3 font-medium"
+          target="_blank"
+          >
             Enviar mensagem no whatsApp <i></i>
           </a>
         </main>

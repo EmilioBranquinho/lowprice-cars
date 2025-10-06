@@ -112,7 +112,7 @@ function handleRegister(data: FormData){
   addDoc(collection(db, "cars"), {
     // id: 
     idUser: user?.uid,
-    name: data.name,
+    name: data.name.toUpperCase(),
     model: data.model,
     year: data.year,
     km: data.km,
