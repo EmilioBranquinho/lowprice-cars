@@ -13,6 +13,7 @@ import { AuthContext } from "@/components/context/authContext"
 import { collection, addDoc, query, orderBy, getDocs, doc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore"
 import { db } from "@/services/firebaseConnection"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
+import toast from "react-hot-toast"
 
 interface ImageItemProps{
   id: string;
@@ -100,12 +101,11 @@ async function handleUpload(image: File) {
   }
 }
 
-
-
 function handleRegister(data: FormData){
   setLoading(true)
   if(carImages.length === 0){
-    alert("Envie alguma imagem!");
+    toast.error("Envie alguma imagem!")
+    setLoading(false)
     return;
   }
 
@@ -128,9 +128,11 @@ function handleRegister(data: FormData){
     reset();
     setCarImages([]);
     setLoading(false)
+    toast.success(`Carro cadastrado com sucesso!🤝`)
   })
   .catch((error)=>{
     console.log(error)
+    setLoading(false)
   })
 }
 

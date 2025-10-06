@@ -7,6 +7,7 @@ import { SkeletonCard } from "@/components/skeleton-card";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 import type { ImageItemProps } from "../dashboard/new";
+import { SearchInput } from "@/components/ui/search-input";
 
 interface CarProps{
     id: string,
@@ -112,14 +113,14 @@ function Home() {
     <>
     <Container>
       <section className="pt-3 w-full max-w-3xl mx-auto flex justify-center items-center">
-        <input
-            type="text"
-            className="bg-white lg:w-3xl rounded-r-none"
+        <SearchInput
+        type="text"
+            className="lg:w-3xl rounded-r-none"
             placeholder="Pesquise por carros:"
             name="search"
             value={inputSearch}
             onChange={e=>{setInputSearch(e.target.value)}}
-            />
+        />
        <Button onClick={handleSearchCar} className="rounded-l-none bg-red-600"><Search/></Button>
       </section> 
         <h1 className="text-center mt-10 text-3xl  font-medium">Carros novos e usados</h1>
