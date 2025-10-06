@@ -7,6 +7,7 @@ import CarDetails from "./pages/car";
 import Dashboard from "./pages/dashboard";
 import NewCar from "./pages/dashboard/new";
 import Private from "./components/private/private";
+import { NotFound } from "./pages/404";
 
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             <Private>
               <NewCar/>
             </Private>  
+          },
+            {
+            path: '*',
+            element: <NotFound/>
           },
 
         ]
