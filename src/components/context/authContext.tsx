@@ -1,7 +1,6 @@
 import { type ReactNode, createContext, useState, useEffect } from "react";
 import { auth, db } from "@/services/firebaseConnection";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
 interface AuthProviderProps{
     children: ReactNode
@@ -12,7 +11,6 @@ type AuthContextData = {
     loadingAuth: boolean;
     user: UserProps | null;
     handleUpdateUser:({uid, name, email}: UserProps) => void;
-    cars: CarProps[];
 }
 
 interface UserProps{
@@ -21,26 +19,12 @@ interface UserProps{
     email: string | null;
 }
 
-interface CarProps{
-    idUser: string,
-    name: string,
-    model: string,
-    year: string,
-    km: string,
-    price: string,
-    city: string,
-    whatsapp: string,
-    description: string,
-    createdAt: string
-}
-
 export const AuthContext = createContext({} as AuthContextData)
 
 function AuthProvider({children}: AuthProviderProps){
 
     const[user, setUser] = useState<UserProps | null>(null);
     const[loadingAuth, setLoadingAuth] = useState(true);
-    const[cars, setCars] = useState<CarProps[]>([]);
 
     useEffect(()=>{
 
@@ -58,39 +42,11 @@ function AuthProvider({children}: AuthProviderProps){
             }
         })
 
-async function getCars(){
-    const carsRef = collection(db, "cars")
-    const queryRef = query(carsRef, orderBy("createdAt", "desc"));
-  
-    const unsub = onSnapshot(queryRef, (snapshot) => {
-      let allCars = [] as CarProps[];
-  
-      snapshot.forEach((doc)=>{
-        allCars.push({
-          idUser: doc.data().idUser,
-          name: doc.data().name,
-          model: doc.data().model,
-          year: doc.data().year,
-          km: doc.data().km,
-          price: doc.data().price,
-          city: doc.data().city,
-          whatsapp: doc.data().city,
-          description: doc.data().description,
-          createdAt: doc.data().createdAt,
-        })
-      })
-        setCars(allCars)
-    })
-  }
-
-  getCars()
-
         return () =>{
             unsub();
         }
 
-
-    }, [cars])
+    }, [])
 
 
      function handleUpdateUser({uid, name, email}: UserProps){
@@ -108,7 +64,7 @@ async function getCars(){
             loadingAuth, 
             user,
             handleUpdateUser,
-            cars
+            //cars
             }}>
             {children}
         </AuthContext.Provider>

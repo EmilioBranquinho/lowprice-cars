@@ -8,15 +8,11 @@ import { useForm } from "react-hook-form"
 import z from "zod"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useContext, useEffect, useState, type ChangeEvent } from "react"
+import { useContext, useEffect, useMemo, useState, type ChangeEvent } from "react"
 import { AuthContext } from "@/components/context/authContext"
 import { collection, addDoc, query, orderBy, getDocs, doc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore"
 import { db } from "@/services/firebaseConnection"
-
-interface ImgProps{
-  image: string;
-  userId: string;
-}
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
 
 interface ImageItemProps{
   id: string;
@@ -41,9 +37,9 @@ interface ImageItemProps{
 
 function NewCar() {
 
-  const {user} = useContext(AuthContext)
-  //const[images, setImages] = useState<ImgProps[]>([]);
-  const[carImages, setCarImages] = useState<ImageItemProps[]>([])
+  const {user} = useContext(AuthContext);
+  const[carImages, setCarImages] = useState<ImageItemProps[]>([]);
+  const[loading, setLoading] = useState(false);
 
   const {register, handleSubmit, formState: {errors}, reset} = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -51,56 +47,66 @@ function NewCar() {
   })
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
-  if (e.target.files && e.target.files[0]) {
-    const image = e.target.files[0];
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    if (image.type === "image/jpeg" || image.type === "image/png") {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        handleUpload(base64String);
-      };
-
-      reader.readAsDataURL(image); 
-    } else {
-      alert("O formato da imagem deve ser PNG ou JPEG");
-    }
+  if (file.type === "image/jpeg" || file.type === "image/png") {
+    handleUpload(file);
+  } else {
+    alert("O formato da imagem deve ser PNG ou JPEG");
   }
 }
+
  
-async function handleUpload(base64Image: string) {
+async function handleUpload(image: File) {
   if (!user?.uid) return;
 
-  try {
-    const ImagesRef = collection(db, "images");
+  const formData = new FormData();
+  formData.append("file", image);
+  formData.append("upload_preset", "unsigned_upload"); // <-- muda pro teu nome do preset
 
+  try {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dhgrgidm7/image/upload", // <-- muda "teu_nome"
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    // URL da imagem no Cloudinary:
+    const imageUrl = data.secure_url;
+
+    // Guarda no Firestore:
+    const ImagesRef = collection(db, "images");
     const docRef = await addDoc(ImagesRef, {
       userId: user.uid,
-      image: base64Image,
+      imageUrl,
       createdAt: new Date(),
     });
 
-    // Aqui está o ID gerado automaticamente:
+    // Atualiza estado local:
     const newImage = {
       id: docRef.id,
       userId: user.uid,
-      link: base64Image,
+      link: imageUrl,
     };
 
-    // Atualiza o estado local
     setCarImages((prev) => [...prev, newImage]);
-
   } catch (error) {
     console.error("Erro ao enviar imagem:", error);
   }
 }
 
 
-function handleRegister(data: FormData){
 
+function handleRegister(data: FormData){
+  setLoading(true)
   if(carImages.length === 0){
-    alert("Envie alguma imagem!")
+    alert("Envie alguma imagem!");
+    return;
   }
 
   addDoc(collection(db, "cars"), {
@@ -121,12 +127,18 @@ function handleRegister(data: FormData){
   .then(()=>{
     reset();
     setCarImages([]);
-    alert("Carro cadastrado com sucesso!");
+    setLoading(false)
   })
   .catch((error)=>{
     console.log(error)
   })
 }
+
+const userImages = useMemo(
+  () => carImages.filter((image) => image.userId === user?.uid),
+  [carImages, user?.uid]
+);
+
 
 async function handleDeleteImage(id: string) {
   try {
@@ -137,7 +149,11 @@ async function handleDeleteImage(id: string) {
   }
 }
 
-
+if(loading){
+  return <div className="flex items-center justify-center h-screen">
+    <div><Spinner/></div>
+    </div>
+}
 
 
   return (
@@ -159,7 +175,7 @@ async function handleDeleteImage(id: string) {
             />
           </div>
         </button>
-         {carImages.length > 0 && carImages.filter((image)=> image.userId === user?.uid).map((image)=>(
+         {userImages.length > 0 && userImages.map((image)=>(
           <>
           <div key={image.link} className="border-2 h-36 w-full relative rounded-lg flex items-center justify-center ml-3">
            <button onClick={()=>handleDeleteImage(image.id)} className="absolute">
@@ -171,12 +187,11 @@ async function handleDeleteImage(id: string) {
            />
         </div>
           </>
-         ))}
-         
+         ))}  
       </div>
 
       <div className="w-full p-3 rounded-lg border py-6 shadow-sm flex flex-col sm:flex-row gap-2 mt-2 max-h-4/5">
-    <div className="w-full space-y-3">
+    <form onSubmit={handleSubmit(handleRegister)}  className="w-full space-y-3">
       <FieldSet>
         <FieldGroup>
           <div className="flex flex-col flex-wrap lg:flex-row gap-5 w-full">
@@ -266,13 +281,13 @@ async function handleDeleteImage(id: string) {
               </Field>
               {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>}
             </div>
-            <Button onClick={handleSubmit(handleRegister)} className="w-full">
+            <Button type="submit" className="w-full">
               Cadastrar
             </Button>
           </div>
         </FieldGroup>
       </FieldSet>
-    </div>
+    </form>
       </div>
 
     </Container>
@@ -282,4 +297,4 @@ async function handleDeleteImage(id: string) {
 }
 
 export default NewCar
-export type {ImgProps}
+export type {ImageItemProps}
