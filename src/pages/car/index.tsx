@@ -10,7 +10,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-
 function CarDetails() {
 
   const {id} = useParams();
@@ -19,14 +18,23 @@ function CarDetails() {
   const navigate = useNavigate();
 
   useEffect(()=>{
+    getCarDetals();
+    
+    handleResize();
 
+    window.addEventListener("resize", handleResize);
+
+    return;
+  });
+
+function getCarDetals(){
     const docRef = doc(db, "cars", id)
     getDoc(docRef)
     .then((snapshot)=>{
 
-      if(!snapshot.data()){
+    if(!snapshot.data()){
         navigate('/')
-      }
+    }
       setCarDetails({
         id: snapshot.id,
         idUser: snapshot.data()?.idUser,
@@ -41,54 +49,44 @@ function CarDetails() {
         owner: snapshot.data()?.owner,
         images: snapshot.data()?.images,
         createdAt: snapshot.data()?.createdAt
-      })
-    })
-  })
+      });
+    });
+};
 
-
-  useEffect(()=>{
-
-    function handleResize(){
-      if(window.innerWidth < 720){
+function handleResize(){
+  if(window.innerWidth < 720){
         setSliderPreview(1)
       } else {
         setSliderPreview(2)
       }
-    }
+  };
 
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return;
-  },[])
   return (
     <>
     <Container>
       {carDetails &&(
-        <Swiper
+      <Swiper
       className="mt-3 lg:mx-4"
       modules={[Navigation, Pagination, Scrollbar, A11y]}
       slidesPerView={sliderPreview}
       navigation
       pagination={{ clickable: true }}
       >
-    {carDetails?.images.map((image) => (
+      {carDetails?.images.map((image) => (
       <SwiperSlide key={image.id} className="flex justify-center items-center">
-        <img
-        src={image.link}
-        className="w-full h-80 object-cover rounded-sm"
-        alt={`Imagem ${image.id}`}
-        />
+      <img
+      src={image.link}
+      className="w-full h-80 object-cover rounded-sm"
+      />
       </SwiperSlide>
-   ))}
+      ))}
       </Swiper>
-    )}
+      )}
       
       {carDetails &&(
         <>
         <main className="w-full rounded-lg border py-6 shadow-sm lg:mx-4 h-auto mt-3">
-          <div className="flex justify-between mx-4 text-3xl font-bold">
+          <div className="flex justify-between mx-4 md:text-3xl font-bold text-lg ">
             <h1>{carDetails?.name}</h1>
             <h1>MZN {carDetails.price}</h1>
           </div>
@@ -109,11 +107,11 @@ function CarDetails() {
             <h1 className="font-semibold">{carDetails?.km}</h1>
           </div>
           </div>
-          <div className="mt-10 mx-4 flex flex-col gap-2 w-auto">
+          <div className="mt-5 lg:mt-10 mx-4 flex flex-col gap-2 w-auto">
             <h1 className="font-semibold">Descrição</h1>
             <p className="">{carDetails?.description}</p>
           </div>
-          <div className="mt-10 mx-4 flex flex-col">
+          <div className="mt-5 lg:mt-10 mx-4 flex flex-col">
             <h1 className="font-semibold">Telefone</h1>
             <p>{carDetails?.whatsapp}</p>
           </div>
@@ -122,7 +120,7 @@ function CarDetails() {
           className="w-auto flex items-center justify-center mx-4 bg-green-600 cursor-pointer rounded-md text-white h-10 mt-3 font-medium"
           target="_blank"
           >
-            Enviar mensagem no whatsApp <i></i>
+            Enviar mensagem no whatsApp
           </a>
         </main>
         </>

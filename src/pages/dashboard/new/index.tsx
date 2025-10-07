@@ -64,11 +64,11 @@ async function handleUpload(image: File) {
 
   const formData = new FormData();
   formData.append("file", image);
-  formData.append("upload_preset", "unsigned_upload"); // <-- muda pro teu nome do preset
+  formData.append("upload_preset", "unsigned_upload"); 
 
   try {
     const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dhgrgidm7/image/upload", // <-- muda "teu_nome"
+      "https://api.cloudinary.com/v1_1/dhgrgidm7/image/upload",
       {
         method: "POST",
         body: formData,
@@ -77,10 +77,8 @@ async function handleUpload(image: File) {
 
     const data = await response.json();
 
-    // URL da imagem no Cloudinary:
     const imageUrl = data.secure_url;
 
-    // Guarda no Firestore:
     const ImagesRef = collection(db, "images");
     const docRef = await addDoc(ImagesRef, {
       userId: user.uid,
@@ -88,7 +86,6 @@ async function handleUpload(image: File) {
       createdAt: new Date(),
     });
 
-    // Atualiza estado local:
     const newImage = {
       id: docRef.id,
       userId: user.uid,
@@ -96,6 +93,7 @@ async function handleUpload(image: File) {
     };
 
     setCarImages((prev) => [...prev, newImage]);
+    toast.success("Imagem enviada com sucesso!")
   } catch (error) {
     console.error("Erro ao enviar imagem:", error);
   }
@@ -179,7 +177,7 @@ if(loading){
         </button>
          {userImages.length > 0 && userImages.map((image)=>(
           <>
-          <div key={image.link} className="border-2 h-36 w-full relative rounded-lg flex items-center justify-center ml-3">
+          <div key={image.link} className="border-2 h-36 w-full relative rounded-lg md:flex lg:flex items-center justify-center ml-3 hidden ">
            <button onClick={()=>handleDeleteImage(image.id)} className="absolute">
             <Trash className="cursor-pointer" color="red"/>
           </button>

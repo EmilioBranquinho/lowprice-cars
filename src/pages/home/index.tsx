@@ -123,12 +123,12 @@ function Home() {
         />
        <Button onClick={handleSearchCar} className="rounded-l-none bg-red-600"><Search/></Button>
       </section> 
-        <h1 className="text-center mt-10 text-3xl  font-medium">Carros novos e usados</h1>
-          <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-5">
+        <h1 className="text-center mt-10 lg:text-3xl text-xl font-bold"><span className="text-red-600">CARROS</span> NOVOS E USADOS</h1>
+          <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-5 items-center justify-center">
         {cars.map((car)=>(
             <>
             <Link to={`car/${car.id}`} key={car.id}>
-              <section className="lg:min-w-72 lg:max-w-72 bg-white rounded-lg shadow-md">
+              <section className="min-w-96 max-w-96 lg:min-w-72 lg:max-w-72 bg-white rounded-lg shadow-md">
               <div
               style={{ display: loadImages.includes(car.id) ? "none" : "block"}}
               >
