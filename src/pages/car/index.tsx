@@ -30,30 +30,32 @@ function CarDetails() {
   });
 
 function getCarDetals(){
-    const docRef = doc(db, "cars", id)
+
+    const docRef = doc(db, "cars", id!)
     getDoc(docRef)
     .then((snapshot)=>{
 
     if(!snapshot.data()){
         navigate('/')
     }
-      setCarDetails({
-        id: snapshot.id,
-        idUser: snapshot.data()?.idUser,
-        name: snapshot.data()?.name,
-        year: snapshot.data()?.year,
-        city: snapshot.data()?.city,
-        km: snapshot.data()?.km,
-        price: snapshot.data()?.price,
-        model:snapshot.data()?.model,
-        description: snapshot.data()?.description,
-        whatsapp: snapshot.data()?.whatsapp,
-        owner: snapshot.data()?.owner,
-        images: snapshot.data()?.images,
-        createdAt: snapshot.data()?.createdAt
+  
+    setCarDetails({
+      id: snapshot.id,
+      idUser: snapshot.data()?.idUser,
+      name: snapshot.data()?.name,
+      year: snapshot.data()?.year,
+      city: snapshot.data()?.city,
+      km: snapshot.data()?.km,
+      price: snapshot.data()?.price,
+      model:snapshot.data()?.model,
+      description: snapshot.data()?.description,
+      whatsapp: snapshot.data()?.whatsapp,
+      owner: snapshot.data()?.owner,
+      images: snapshot.data()?.images,
+      createdAt: snapshot.data()?.createdAt
       });
       setLoading(false)
-    });
+      });
 };
 
 function handleResize(){
