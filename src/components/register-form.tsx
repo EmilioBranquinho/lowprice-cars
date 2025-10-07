@@ -1,5 +1,3 @@
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,6 +12,7 @@ import { useNavigate } from "react-router"
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "./context/authContext";
+import toast from "react-hot-toast";
 
  const schema = z.object({
     name: z.string().nonempty("O campo do nome completo é obrigatório"),
@@ -27,7 +26,6 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
 
     const navigate = useNavigate();
     const[loading, setLoading] = useState(false);
-    const[openDialog, setOpenDialog] = useState(false)
     const {handleUpdateUser} = useContext(AuthContext)
 
     const {register, handleSubmit, formState: {errors}} = useForm<FormData>({
@@ -40,31 +38,34 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
           await signOut(auth)
           .then(()=>{
             console.log("Deslogou!")
-          })
-        }
-              handleLogOut()
-      })
+          });
+          }
+          handleLogOut()
+        });
     
     
-     async function onSubmit(data: FormData){
+    async function onSubmit(data: FormData){
        setLoading(true)
        createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async(user)=>{
         await updateProfile(user.user, {
           displayName: data.name
-      }) 
-          handleUpdateUser({
-            uid: user.user.uid,
-            name: data.name,
-            email: data.email
-          })
-          setOpenDialog(true)
-          setLoading(false)
+      });
+        handleUpdateUser({
+          uid: user.user.uid,
+          name: data.name,
+          email: data.email
+          });
+        setLoading(false)
+        toast.success("Cadastro feito com sucesso!")
       })
       .catch((error)=>{
+        setLoading(false)
+        toast.error("Erro, tente novamente!")
         console.log(error)
-      })
+      });
     }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -123,16 +124,6 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
         </CardContent>
       </Card>
 
-      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Cadastro feito com sucesso!</AlertDialogTitle>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel onClick={() => navigate("/login")}>ok</AlertDialogCancel>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>
     </div>
     
   )
