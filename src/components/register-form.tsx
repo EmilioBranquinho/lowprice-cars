@@ -28,7 +28,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
     const[loading, setLoading] = useState(false);
     const {handleUpdateUser} = useContext(AuthContext)
 
-    const {register, handleSubmit, formState: {errors}} = useForm<FormData>({
+    const {register, handleSubmit, formState: {errors}, reset} = useForm<FormData>({
       resolver: zodResolver(schema),
       mode: "onChange"
     });
@@ -55,9 +55,13 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
           uid: user.user.uid,
           name: data.name,
           email: data.email
-          });
-        setLoading(false)
-        toast.success("Cadastro feito com sucesso!")
+      });
+        reset();
+        setLoading(false);
+        toast.success("Cadastro feito com sucesso!");
+        setTimeout(()=>{
+          navigate("/login");
+        },3000);
       })
       .catch((error)=>{
         setLoading(false)

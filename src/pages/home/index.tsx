@@ -8,6 +8,7 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 import type { ImageItemProps } from "../dashboard/new";
 import { SearchInput } from "@/components/ui/search-input";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 interface CarProps{
     id: string,
@@ -30,6 +31,7 @@ function Home() {
     const[loadImages, setLoadImages] = useState<string[]>([]);
     const[cars, setCars] = useState<CarProps[]>([]);
     const[inputSearch, setInputSearch] = useState("");
+    const[loading, setLoading] = useState(true);
 
     useEffect(()=>{
 
@@ -62,6 +64,7 @@ function Home() {
               })
             })
               setCars(allCars)
+              setLoading(false)
           })                  
    }
 
@@ -103,10 +106,12 @@ function Home() {
     setCars(searchedCars)
     console.log(searchedCars)
   }
-
-
     function handleImageLoad(id:string){
       setLoadImages((prev) => [...prev, id])
+    }
+
+    if(loading){
+      return <div className="flex h-screen items-center justify-center"><div><Spinner color="red"/></div></div>
     }
 
   return (

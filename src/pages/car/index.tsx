@@ -9,12 +9,14 @@ import { A11y, Navigation, Pagination, Scrollbar } from "swiper/modules";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 function CarDetails() {
 
   const {id} = useParams();
   const[carDetails, setCarDetails] = useState<CarProps>();
   const[sliderPreview, setSliderPreview] = useState<number>(2);
+  const[loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -50,6 +52,7 @@ function getCarDetals(){
         images: snapshot.data()?.images,
         createdAt: snapshot.data()?.createdAt
       });
+      setLoading(false)
     });
 };
 
@@ -60,6 +63,10 @@ function handleResize(){
         setSliderPreview(2)
       }
   };
+
+    if(loading){
+        return <div className="flex h-screen items-center justify-center"><div><Spinner color="red"/></div></div>
+      }
 
   return (
     <>

@@ -6,53 +6,58 @@ import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/fire
 import { MapPin, Trash } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import type { CarProps } from "../home"
+import { Spinner } from "@/components/ui/shadcn-io/spinner"
 
 function Dashboard() {
 
   const[cars, setCars] = useState<CarProps[]>([]);
+  const[loading, setLoading] = useState(true);
   const {user} = useContext(AuthContext)
   
-      useEffect(()=>{
-        async function getCars(){
-            const carsRef = collection(db, "cars")
-            const queryRef = query(carsRef, where("idUser", "==", user?.uid));
+useEffect(()=>{
+  async function getCars(){
+    const carsRef = collection(db, "cars")
+    const queryRef = query(carsRef, where("idUser", "==", user?.uid));
           
-            getDocs(queryRef)
-            .then((snapshot)=>{
-              let allCars = [] as CarProps[];
-  
-               snapshot.forEach((doc)=>{
-                allCars.push({
-                  id: doc.id,
-                  idUser: doc.data().idUser,
-                  name: doc.data().name,
-                  model: doc.data().model,
-                  year: doc.data().year,
-                  km: doc.data().km,
-                  price: doc.data().price,
-                  city: doc.data().city,
-                  whatsapp: doc.data().city,
-                  description: doc.data().description,
-                  createdAt: doc.data().createdAt,
-                  owner: doc.data().owner,
-                  images: doc.data().images
-                })
-              })
-                setCars(allCars)
-            }) 
+    getDocs(queryRef)
+    .then((snapshot)=>{
+      let allCars = [] as CarProps[];
+        snapshot.forEach((doc)=>{
+          allCars.push({
+            id: doc.id,
+            idUser: doc.data().idUser,
+            name: doc.data().name,
+            model: doc.data().model,
+            year: doc.data().year,
+            km: doc.data().km,
+            price: doc.data().price,
+            city: doc.data().city,
+            whatsapp: doc.data().city,
+            description: doc.data().description,
+            createdAt: doc.data().createdAt,
+            owner: doc.data().owner,
+            images: doc.data().images
+    })
+    })
+      setCars(allCars);
+      setLoading(false);
+    }) 
                       
-     }
+    }
         getCars()
       }, [cars])
 
 
-      async function handleDeleteCar(id: string){
-        await deleteDoc(doc(db, "cars", id))
-        .then(()=>{
-          setCars(cars.filter(car => car.id !== id))
-        })
+async function handleDeleteCar(id: string){
+  await deleteDoc(doc(db, "cars", id))
+    .then(()=>{
+      setCars(cars.filter(car => car.id !== id))
+    })
+    }
 
-      }
+   if(loading){
+        return <div className="flex h-screen items-center justify-center"><div><Spinner color="red"/></div></div>
+    }
 
   return (
     <>
