@@ -12,6 +12,7 @@ import { useNavigate } from "react-router"
 import { useState, useEffect, useContext } from "react"
 import { Spinner } from "./ui/shadcn-io/spinner";
 import { AuthContext } from "./context/authContext"
+import toast from "react-hot-toast"
 
  const schema = z.object({
     email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
@@ -35,23 +36,26 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     async function handleLogOut(){
       await signOut(auth)
       .then(()=>{
-            console.log("Deslogou!")
-        })
-    }
+        console.log("Deslogou!")
+      })
+      }
 
-       handleLogOut()
-  }, [])
+      handleLogOut()
+    }, [])
 
   async function onSubmit(data: FormData){
     setLoading(true)
     await signInWithEmailAndPassword(auth, data.email, data.password)
-    .then((user)=>{
+    .then(()=>{
       setLoading(false);
-      console.log(user);
+      toast.success("Login feito com sucesso!")
       navigate("/dashboard");
     })
     .catch((error) =>{
+      setLoading(false)
+      toast.error("Erro, insira as credenciais corretas e tente novamente!")
       console.log(error)
+      return;
     })
   }
 
@@ -62,7 +66,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-red-600 text-2xl font-bold text-center">LowPrice <span className="text-black">Cars</span></h1>
+            <h1 className="text-red-600 text-2xl font-bold text-center">LowPrice <span className="text-black">Cars🏎</span></h1>
           </CardTitle>
         </CardHeader>
         <CardContent>

@@ -123,7 +123,7 @@ function Home() {
         />
        <Button onClick={handleSearchCar} className="rounded-l-none bg-red-600"><Search/></Button>
       </section> 
-        <h1 className="text-center mt-10 lg:text-3xl text-xl font-bold"><span className="text-red-600">CARROS</span> NOVOS E USADOS</h1>
+        <h1 className="text-center mt-10 lg:text-3xl text-2xl font-bold"><span className="text-red-600">CARROS</span> NOVOS E USADOS</h1>
           <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-5 items-center justify-center">
         {cars.map((car)=>(
             <>

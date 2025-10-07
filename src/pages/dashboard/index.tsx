@@ -58,7 +58,7 @@ function Dashboard() {
     <>
     <Container>
       <DashboardHeader/>
-      <h1 className="text-center mt-10">Meus carros</h1>
+       <h1 className="text-center mt-10 lg:text-3xl text-2xl font-bold"><span className="text-red-600">MEUS</span> CARROS</h1>
         <main className="grid gird-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mt-5">
         {cars.map((car)=>(
             <>

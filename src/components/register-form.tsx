@@ -70,7 +70,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
       <Card>
         <CardHeader>
           <CardTitle>
-            <h1 className="text-red-600 text-2xl font-bold text-center">LowPrice <span className="text-black">Cars</span></h1>
+            <h1 className="text-red-600 text-2xl font-bold text-center">LowPrice <span className="text-black">Cars🏎</span></h1>
           </CardTitle>
         </CardHeader>
         <CardContent>
