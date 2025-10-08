@@ -2,6 +2,7 @@
   "name": "lowprice-cars",
   "private": true,
   "version": "0.0.0",
+  "author": "Emilio Branquinho",
   "type": "module",
   "scripts": {
     "dev": "vite",
