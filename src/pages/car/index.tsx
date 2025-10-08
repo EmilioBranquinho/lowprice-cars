@@ -10,6 +10,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { FaWhatsapp } from "react-icons/fa";
 
 function CarDetails() {
 
@@ -126,10 +127,10 @@ function handleResize(){
           </div>
           <a 
           href={`https://api.whatsapp.com/send?phone=${carDetails.whatsapp}&text= Olá, vi esse ${carDetails.name} no site LowPrice cars e fiquei interessado`} 
-          className="w-auto flex items-center justify-center mx-4 bg-green-600 cursor-pointer rounded-md text-white h-10 mt-3 font-medium"
+          className="w-auto flex items-center justify-center mx-4 bg-green-600 cursor-pointer rounded-md text-white h-10 mt-3 font-medium gap-2"
           target="_blank"
           >
-            Enviar mensagem no whatsApp
+            Enviar mensagem no whatsApp <i><FaWhatsapp size={20}/></i>
           </a>
         </main>
         </>
