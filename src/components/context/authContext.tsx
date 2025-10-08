@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useState, useEffect } from "react";
-import { auth, db } from "@/services/firebaseConnection";
+import { auth } from "@/services/firebaseConnection";
 import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthProviderProps{
@@ -34,19 +34,18 @@ function AuthProvider({children}: AuthProviderProps){
                     uid: user.uid,
                     name: user?.displayName,
                     email: user?.email
-                })
+            })
                 setLoadingAuth(false)
             } else {
                 setUser(null)
                 setLoadingAuth(false)
             }
-        })
+            })
+                return () =>{
+                    unsub();
+            }
 
-        return () =>{
-            unsub();
-        }
-
-    }, [])
+            }, [])
 
 
      function handleUpdateUser({uid, name, email}: UserProps){
@@ -54,7 +53,7 @@ function AuthProvider({children}: AuthProviderProps){
             uid,
             name,
             email
-        })
+    })
     }
 
     return(

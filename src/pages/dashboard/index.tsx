@@ -44,8 +44,8 @@ useEffect(()=>{
     }) 
                       
     }
-        getCars()
-      }, [cars])
+      getCars()
+    }, [cars])
 
 
 async function handleDeleteCar(id: string){
@@ -56,8 +56,8 @@ async function handleDeleteCar(id: string){
     }
 
    if(loading){
-        return <div className="flex h-screen items-center justify-center"><div><Spinner color="red"/></div></div>
-    }
+    return <div className="flex h-screen items-center justify-center"><div><Spinner color="red" variant="bars"/></div></div>
+   }
 
   return (
     <>

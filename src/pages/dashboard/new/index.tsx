@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form"
 import z from "zod"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useContext, useEffect, useMemo, useState, type ChangeEvent } from "react"
+import { useContext, useMemo, useState, type ChangeEvent } from "react"
 import { AuthContext } from "@/components/context/authContext"
-import { collection, addDoc, query, orderBy, getDocs, doc, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore"
+import { collection, addDoc, doc, deleteDoc } from "firebase/firestore"
 import { db } from "@/services/firebaseConnection"
 import { Spinner } from "@/components/ui/shadcn-io/spinner"
 import toast from "react-hot-toast"
@@ -30,14 +30,13 @@ interface ImageItemProps{
     city: z.string().nonempty("A o campo da cidade não pode ficar vazio"),
      whatsapp: z.string().min(1, "O Whatsapp é obrigatório").refine((value) => /^(\d{9,13})$/.test(value), {
       message: "Número de telefone inválido"
-    }),
+  }),
     description: z.string().nonempty("A descrição não pode ficar vazia"),
   })
 
   type FormData = z.infer<typeof schema>;
 
 function NewCar() {
-
   const {user} = useContext(AuthContext);
   const[carImages, setCarImages] = useState<ImageItemProps[]>([]);
   const[loading, setLoading] = useState(false);
@@ -72,11 +71,10 @@ async function handleUpload(image: File) {
       {
         method: "POST",
         body: formData,
-      }
-    );
+  }
+  );
 
     const data = await response.json();
-
     const imageUrl = data.secure_url;
 
     const ImagesRef = collection(db, "images");
@@ -151,10 +149,9 @@ async function handleDeleteImage(id: string) {
 
 if(loading){
   return <div className="flex items-center justify-center h-screen">
-    <div><Spinner/></div>
+    <div><Spinner variant="bars"/></div>
     </div>
 }
-
 
   return (
     <>
@@ -189,7 +186,6 @@ if(loading){
           </>
          ))}  
       </div>
-
       <div className="w-full p-3 rounded-lg border py-6 shadow-sm flex flex-col sm:flex-row gap-2 mt-2 max-h-4/5">
     <form onSubmit={handleSubmit(handleRegister)}  className="w-full space-y-3">
       <FieldSet>
@@ -244,7 +240,7 @@ if(loading){
               name="price"
               register={register}
               error={errors.price?.message}
-              />
+            />
             </Field>
             </div>
              <div className="flex gap-3 w-full">
@@ -256,7 +252,7 @@ if(loading){
                 name="city"
                 register={register}
                 error={errors.city?.message}
-                />
+              />
               </Field>
               <Field>
               <FieldLabel htmlFor="zip">WhatsApp</FieldLabel>
@@ -270,28 +266,26 @@ if(loading){
             </Field>
             </div>
             <div className="w-full">
-              <Field>
-                <FieldLabel htmlFor="city">Descrição</FieldLabel>
-                <Textarea
-                {...register("description")}
-                 className="h-40"
-                 name="description"
-                 id="description"        
-                />
-              </Field>
-              {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>}
+            <Field>
+            <FieldLabel htmlFor="city">Descrição</FieldLabel>
+            <Textarea
+            {...register("description")}
+            className="h-40"
+            name="description"
+            id="description"        
+            />
+            </Field>
+            {errors.description && <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>}
             </div>
             <Button type="submit" className="w-full">
               Cadastrar
             </Button>
-          </div>
+            </div>
         </FieldGroup>
       </FieldSet>
     </form>
-      </div>
-
+    </div>
     </Container>
-   
     </>  
   )
 }
