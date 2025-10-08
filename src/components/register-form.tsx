@@ -61,7 +61,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
         toast.success("Cadastro feito com sucesso!");
         setTimeout(()=>{
           navigate("/login");
-        },3000);
+        },2000);
       })
       .catch((error)=>{
         setLoading(false)

@@ -4,7 +4,7 @@ import { Container } from "@/components/Container";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { SkeletonCard } from "@/components/skeleton-card";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/services/firebaseConnection";
 import type { ImageItemProps } from "../dashboard/new";
 import { SearchInput } from "@/components/ui/search-input";
@@ -40,7 +40,8 @@ function Home() {
 
     async function getCars(){
           const carsRef = collection(db, "cars")
-          const queryRef = query(carsRef, orderBy("createdAt", "desc"));
+          const LIMIT = 12;
+          const queryRef = query(carsRef, orderBy("createdAt", "desc"), limit(LIMIT));
         
           getDocs(queryRef)
           .then((snapshot)=>{
