@@ -1,14 +1,14 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { auth } from "@/services/firebaseConnection"
-import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth"
-import { useNavigate } from "react-router"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { auth } from "@/services/firebaseConnection";
+import { createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router";
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "./context/authContext";
@@ -34,14 +34,14 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
     });
 
     useEffect(()=>{
-        async function handleLogOut(){
-          await signOut(auth)
-          .then(()=>{
-            console.log("Deslogou!")
-          });
-          }
-          handleLogOut()
+      async function handleLogOut(){
+        await signOut(auth)
+        .then(()=>{
+          console.log("Deslogou!")
         });
+      }
+        handleLogOut()
+      });
     
     
     async function onSubmit(data: FormData){
@@ -70,7 +70,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
       });
     }
 
-  return (
+return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
@@ -127,10 +127,6 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
           </form>
         </CardContent>
       </Card>
-
     </div>
-    
   )
-
-  
 }

@@ -53,7 +53,7 @@ function AuthProvider({children}: AuthProviderProps){
             uid,
             name,
             email
-    })
+        })
     }
 
     return(
@@ -62,8 +62,7 @@ function AuthProvider({children}: AuthProviderProps){
             signed: !!user,
             loadingAuth, 
             user,
-            handleUpdateUser,
-            //cars
+            handleUpdateUser
             }}>
             {children}
         </AuthContext.Provider>

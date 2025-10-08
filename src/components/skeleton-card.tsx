@@ -12,8 +12,7 @@ export function SkeletonCard() {
           <Skeleton className="h-4 w-[150px] mx-2" />
           <div className=" border-b"></div>
            <Skeleton className="h-4 w-[150px] mb-1 mx-2"/>
-        </div>
-
+      </div>
     </div>
   )
 }
