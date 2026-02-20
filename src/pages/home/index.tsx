@@ -9,6 +9,7 @@ import { db } from "@/services/firebaseConnection";
 import type { ImageItemProps } from "../dashboard/new";
 import { SearchInput } from "@/components/ui/search-input";
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { Footer } from "@/components/Footer";
 
 interface CarProps{
     id: string,
@@ -164,6 +165,7 @@ function Home() {
           ))}
       </main>
     </Container>
+    <Footer/>
     </>  
   )
 }

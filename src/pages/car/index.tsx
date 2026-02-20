@@ -11,6 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Spinner } from "@/components/ui/shadcn-io/spinner";
 import { FaWhatsapp } from "react-icons/fa";
+import { Footer } from "@/components/Footer";
 
 function CarDetails() {
 
@@ -136,6 +137,7 @@ function handleResize(){
         </>
       )}
     </Container>
+    <Footer/>
     </>  
   )
 }
